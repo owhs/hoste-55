@@ -12,12 +12,19 @@ checks it, and finds its roots to 50 digits. Optional: if SnapPy is installed, i
 of the actual knot diagram, an independent method.
 
 Requirements: Python 3.8+, mpmath (pip install mpmath). Optional: snappy, sympy.
-Run: python verify.py
+Run: python verify.py [K45 | K55 | K57]   (default K55)
 """
+import sys
+
 import mpmath
 
-BLOCK = [1, 1, -2, -2, -2, 3, -2, 3, -2, -2, 1]   # 1 = s1, -2 = s2^-1, ...
-STRANDS, REPEATS = 4, 5
+KNOTS = {   # name: (block, strands, repeats); 1 = s1, -2 = s2^-1, ...
+    "K45": ([3, -2, 3, -2, 3, 3, -2, -2, -2, -2, 1, 1, 1, -2, -2], 4, 3),
+    "K55": ([1, 1, -2, -2, -2, 3, -2, 3, -2, -2, 1], 4, 5),
+    "K57": ([3, -2, -2, -2, -2, -2, 1, 1, 1, -2, -2, -2, -2, -2, -2, 3, 3, 3, 3], 4, 3),
+}
+NAME = sys.argv[1] if len(sys.argv) > 1 else "K55"
+BLOCK, STRANDS, REPEATS = KNOTS[NAME]
 WORD = BLOCK * REPEATS
 
 

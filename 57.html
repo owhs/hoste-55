@@ -1,15 +1,15 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>K55</title>
-<style>html,body{margin:0;height:100%;background:#0b0d12}canvas{display:block}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>K57</title>
+<style>html,body{margin:0;height:100%;background:#0b0d12;color:#e7e2d6;font:14px/1.5 ui-monospace,Consolas,monospace}
+canvas{display:block}#cap{position:fixed;left:16px;bottom:16px;max-width:calc(100% - 32px);pointer-events:none}
+#cap b{font-size:18px;color:#fff}#cap .r{color:#ee5f73}</style></head>
 <body>
+<div id="cap"><b>57-crossing alternating knot</b><br>(σ₃σ₂⁻⁵σ₁³σ₂⁻⁶σ₃⁴)³ on 4 strands<br>Alexander roots <span class="r">−1.1909 ± 1.4154i</span>, past Re = −1 (Hoste's line)</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-// K55: (s1^2 s2^-3 s3 s2^-1 s3 s2^-2 s1)^5 on 4 strands. 1 = s1, -2 = s2^-1, ...
-const block = [1, 1, -2, -2, -2, 3, -2, 3, -2, -2, 1], strands = 4, reps = 5;
+const block = [3, -2, -2, -2, -2, -2, 1, 1, 1, -2, -2, -2, -2, -2, -2, 3, 3, 3, 3], strands = 4, reps = 3;
 const word = Array(reps).fill(block).flat();
-
-// trace the closed braid as one loop: strands sit on rings around a circle; a crossing swaps two neighbours, one over, one under
 const pts = [], R = 3, gap = 0.5, lift = 0.25, steps = 12, L = word.length;
 let p = 0;
 for (let pass = 0; pass < strands; pass++) {
@@ -28,7 +28,6 @@ for (let pass = 0; pass < strands; pass++) {
   }
   if (p === 0) break;
 }
-
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 7, 8);

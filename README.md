@@ -17,6 +17,8 @@
 
 **A second example, K57,** is (σ₃ σ₂⁻⁵ σ₁³ σ₂⁻⁶ σ₃⁴)³: 57 crossings, with roots at −1.19091423284003776230 ± 1.41538951538023486785 i.
 
+**A smaller one, K45,** is (σ₃ σ₂⁻¹ σ₃ σ₂⁻¹ σ₃² σ₂⁻⁴ σ₁³ σ₂⁻²)³: 45 crossings, with roots at −1.08099125200658141624 ± 1.59244134977223715792 i. It passes the same checks. A search of 40,000 patterns up to 54 crossings found nothing smaller; that search was not exhaustive.
+
 ## Previously known
 Counterexamples were known only among alternating Montesinos knots:
 - **Existence:** Ishikawa, *JKTR* 2018.
@@ -27,10 +29,10 @@ Counterexamples were known only among alternating Montesinos knots:
 We found no earlier counterexample that is a braid closure, that has fewer than 740 crossings, or whose roots go clearly past −1.
 
 ## Checks (`verify.py`)
-Run `pip install mpmath` (optional: `pip install snappy`), then `python verify.py`. It runs in seconds and:
+Run `pip install mpmath` (optional: `pip install snappy`), then `python verify.py K45` (or `K55`, `K57`). It runs in seconds and:
 1. computes Δ exactly from the reduced Burau representation: (1 + t + t² + t³) Δ(t) = det(I − ψ(β));
 2. checks the word is alternating and the closure is one component;
-3. checks Δ has strictly alternating coefficient signs, which rules out a t ↦ −t convention slip, and that it is symmetric, with Δ(1) = 1, monic, of degree c − n + 1 = 52;
+3. checks Δ has strictly alternating coefficient signs, which rules out a t ↦ −t convention slip, and that it is symmetric, with Δ(1) = 1, monic, of degree c − n + 1 (52 for K55, 42 for K45);
 4. finds the roots to 50 digits, with |Δ(z)| ≈ 10⁻³⁴;
 5. counts roots in the box −6 < Re < −1, |Im| < 6 by the argument principle, which finds 2 without locating them;
 6. with SnapPy installed, recomputes Δ = det(V − tVᵀ) from the Seifert matrix of the actual diagram, an independent method, and confirms the diagram is alternating with one component.
@@ -42,7 +44,7 @@ Run `pip install mpmath` (optional: `pip install snappy`), then `python verify.p
 
 ## Files
 - `verify.py`: standalone verification.
-- `k55_certificate.json`, `k57_certificate.json`: braid word, PD code, exact Alexander coefficients, roots, and checks.
-- `knot.html`: open in a browser to see K55 in 3D.
+- `k45_certificate.json`, `k55_certificate.json`, `k57_certificate.json`: braid word, PD code, exact Alexander coefficients, roots, and checks.
+- `45.html`, `55.html`, `57.html`: open in a browser to see each knot in 3D (drag to rotate, scroll to zoom).
 
 Status: computer-verified as above; not yet reviewed by a knot theorist.
