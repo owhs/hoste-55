@@ -1,12 +1,38 @@
-"""writes 45.html, 55.html, 57.html: one simple 3D viewer per knot (three.js), with its braid word and root"""
+"""one simple 3D viewer per knot (three.js), for EVERY k*_certificate.json in this folder: writes <crossings>.html with
+the braid word and root, and index.html linking them all. Add a certificate, rerun, and its page appears.
+Run: python make_viewers.py"""
+import glob
+import itertools
+import json
 import os
+import re
 
 D = os.path.dirname(os.path.abspath(__file__))
-KNOTS = {
-    "45": ([3, -2, 3, -2, 3, 3, -2, -2, -2, -2, 1, 1, 1, -2, -2], 4, 3, "−1.0810 ± 1.5924i", "(σ₃σ₂⁻¹σ₃σ₂⁻¹σ₃²σ₂⁻⁴σ₁³σ₂⁻²)³"),
-    "55": ([1, 1, -2, -2, -2, 3, -2, 3, -2, -2, 1], 4, 5, "−1.1235 ± 1.3560i", "(σ₁²σ₂⁻³σ₃σ₂⁻¹σ₃σ₂⁻²σ₁)⁵"),
-    "57": ([3, -2, -2, -2, -2, -2, 1, 1, 1, -2, -2, -2, -2, -2, -2, 3, 3, 3, 3], 4, 3, "−1.1909 ± 1.4154i", "(σ₃σ₂⁻⁵σ₁³σ₂⁻⁶σ₃⁴)³"),
-}
+SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+SUP = str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻")
+
+
+def word_text(block, reps):
+    """[1, 1, -2, 3] , 5 -> (σ₁²σ₂⁻¹σ₃)⁵"""
+    out = ""
+    for g, run in itertools.groupby(block):
+        e = len(list(run)) * (1 if g > 0 else -1)
+        out += "σ" + str(abs(g)).translate(SUB) + ("" if e == 1 else str(e).translate(SUP))
+    return out if reps == 1 else f"({out})" + str(reps).translate(SUP)
+
+
+def root_text(s):
+    """'(-1.0747... + 1.7916...j)' -> '−1.0747 ± 1.7916i'"""
+    x, y = (float(v) for v in re.findall(r"[-+]?\d+\.\d+", s.replace(" ", ""))[:2])
+    return f"{x:.4f} ± {abs(y):.4f}i".replace("-", "−")
+
+
+KNOTS = {}
+for p in glob.glob(os.path.join(D, "k*_certificate.json")):
+    c = json.load(open(p, encoding="utf-8"))
+    KNOTS[str(c["crossings"])] = (c["block"], c["strands"], c["repeats"], root_text(c["refined_root"]),
+                                  word_text(c["block"], c["repeats"]))
+KNOTS = dict(sorted(KNOTS.items(), key=lambda kv: int(kv[0])))
 TEMPLATE = """<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>K__N__</title>
 <style>html,body{margin:0;height:100%;background:#0b0d12;color:#e7e2d6;font:14px/1.5 ui-monospace,Consolas,monospace}
@@ -63,3 +89,18 @@ for n, (block, s, reps, root, word) in KNOTS.items():
     with open(os.path.join(D, f"{n}.html"), "w", encoding="utf-8") as f:
         f.write(html)
     print(f"{n}.html")
+
+rows = "\n".join(f'<li><a href="{n}.html"><b>K{n}</b></a> {w} on {s} strands, roots <span class="r">{r}</span></li>'
+                 for n, (_b, s, _k, r, w) in KNOTS.items())
+with open(os.path.join(D, "index.html"), "w", encoding="utf-8") as f:
+    f.write(f"""<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hoste counterexamples</title>
+<style>body{{margin:0;padding:24px 16px;background:#0b0d12;color:#e7e2d6;font:15px/1.7 ui-monospace,Consolas,monospace}}
+a{{color:#f1c35f}}.r{{color:#ee5f73}}ul{{padding-left:20px}}</style></head>
+<body><h1 style="font-size:20px">Alternating knots with Alexander roots past Re = −1</h1>
+<p>Counterexamples to Hoste's conjecture. Click a knot to see it in 3D; <code>python verify.py all</code> checks them.</p>
+<ul>
+{rows}
+</ul></body></html>
+""")
+print("index.html")

@@ -1,9 +1,9 @@
-"""Verify the 55-crossing counterexample to Hoste's conjecture.
+"""Verify the counterexamples to Hoste's conjecture (K31, K33, K39, K45, K55, K57).
 
 Hoste's conjecture (2002; Lyubich-Murasugi 2012, Conj. 1): if K is an alternating knot, every root z of its Alexander
 polynomial satisfies Re(z) > -1.
 
-The knot: closure of the 4-strand braid (s1^2 s2^-3 s3 s2^-1 s3 s2^-2 s1)^5. Generators s1, s3 appear only positively and
+The knots: closures of 4-strand braids, e.g. K33 = (s1^3 s2^-3 s3^3 s2^-2)^3. Generators s1, s3 appear only positively and
 s2 only negatively, so the closed braid diagram is alternating; the braid permutation is a 4-cycle, so it is a knot.
 
 This script computes the Alexander polynomial exactly from the reduced Burau representation,
@@ -12,18 +12,27 @@ checks it, and finds its roots to 50 digits. Optional: if SnapPy is installed, i
 of the actual knot diagram, an independent method.
 
 Requirements: Python 3.8+, mpmath (pip install mpmath). Optional: snappy, sympy.
-Run: python verify.py [K45 | K55 | K57]   (default K55)
+Run: python verify.py [K31 | K33 | K39 | K45 | K55 | K57 | all]   (default K31)
 """
 import sys
 
 import mpmath
 
 KNOTS = {   # name: (block, strands, repeats); 1 = s1, -2 = s2^-1, ...
+    "K31": ([3, 3, 3, -2, -2, 1, 1, 1, -2, -2, -2, 3, 3, 3, -2, -2, -2, 1, 1, 1, -2, -2, 3, 3, -2, -2, 1, 1, -2, -2, -2], 4, 1),
+    "K33": ([1, 1, 1, -2, -2, -2, 3, 3, 3, -2, -2], 4, 3),
+    "K39": ([1, 1, 1, -2, -2, -2, 3, 3, 3, -2, -2, -2, -2], 4, 3),
     "K45": ([3, -2, 3, -2, 3, 3, -2, -2, -2, -2, 1, 1, 1, -2, -2], 4, 3),
     "K55": ([1, 1, -2, -2, -2, 3, -2, 3, -2, -2, 1], 4, 5),
     "K57": ([3, -2, -2, -2, -2, -2, 1, 1, 1, -2, -2, -2, -2, -2, -2, 3, 3, 3, 3], 4, 3),
 }
-NAME = sys.argv[1] if len(sys.argv) > 1 else "K55"
+NAME = sys.argv[1] if len(sys.argv) > 1 else "K31"
+if NAME == "all":   # every knot in turn, each in its own run
+    import subprocess
+    for k in KNOTS:
+        print(f"\n===== {k} =====", flush=True)
+        subprocess.run([sys.executable, __file__, k], check=True)
+    sys.exit(0)
 BLOCK, STRANDS, REPEATS = KNOTS[NAME]
 WORD = BLOCK * REPEATS
 
