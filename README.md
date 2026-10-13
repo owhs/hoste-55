@@ -28,6 +28,21 @@
 
 **How K33 was found:** an exhaustive search of one simple family, 4-braid blocks made of at most 6 runs of a single generator (σ₁ᵃ σ₂⁻ᵇ σ₃ᶜ σ₂⁻ᵈ …), repeated, up to 39 crossings: 139,932 knots. It found 116 counterexamples, and K33 is the smallest. Smaller counterexamples outside this family are not ruled out.
 
+### An infinite family with one shared root
+
+**Proposition.** Let B = σ₁³ σ₂⁻³ σ₃³ σ₂⁻² and z₀ = −1.0747491775013915… + 1.7915696505345365… i, the root of K33. For every odd m, the closure of B^(3m) is an alternating knot with Δ(z₀) = 0. So there are infinitely many alternating counterexamples to Hoste's conjecture, all sharing the root z₀.
+
+**Proof.**
+1. Let ψ be the reduced Burau representation of the 4-strand braid group, and λ₁(t), λ₂(t), λ₃(t) the eigenvalues of ψ(B).
+2. For any k, (1 + t + t² + t³) Δ_{B^k}(t) = det(I − ψ(B)^k) = ∏ᵢ (1 − λᵢ(t)^k).
+3. K33 is the closure of B³ and Δ_{B³}(z₀) = 0. The point z₀ is not a 4th root of unity, so 1 − λᵢ(z₀)³ = 0 for some i.
+4. Then λᵢ(z₀)^(3m) = 1, so det(I − ψ(B)^(3m)) vanishes at z₀, and so does Δ_{B^(3m)}.
+5. B^(3m) is alternating, since σ₁ and σ₃ occur only positively and σ₂ only negatively. Its permutation is a 4-cycle when m is odd, so the closure is a knot. ∎
+
+The same argument shows more generally: a root of the closure of B^k is a root of the closure of B^(km) for every m. `family.py` checks the family numerically: |Δ(z₀)| ≈ 10⁻⁸² relative to Δ's size, for the knots of 33, 99, …, 495 crossings, at 80 digits.
+
+Other powers of the same block cross the line too: B⁵, B⁷, B⁹ and B¹¹ have roots at Re −1.123, −1.120, −1.134 and −1.128 (Newton-verified). As k grows, the roots of B^k spread along the curve {t : |λᵢ(t)| = 1} described below.
+
 **The first example found, K55,** is the closure of the 4-strand braid
 
     (σ₁² σ₂⁻³ σ₃ σ₂⁻¹ σ₃ σ₂⁻² σ₁)⁵
@@ -72,6 +87,7 @@ Run `pip install mpmath` (optional: `pip install snappy`), then `python verify.p
 
 ## Files
 - `verify.py`: standalone verification.
+- `family.py`: checks that K33's root is a root of every knot in the infinite family (B^(3m), m odd).
 - `k31_certificate.json`, `k33_certificate.json`, `k39_certificate.json`, `k45_certificate.json`, `k55_certificate.json`, `k57_certificate.json`: braid word, PD code, exact Alexander coefficients, roots, and checks.
 - `index.html`: all the knots; `31.html` … `57.html`: open in a browser to see each knot in 3D (drag to rotate, scroll to zoom).
 - `make_viewers.py`: rebuilds every page from the certificates (add a `k<N>_certificate.json`, rerun, its page appears).
