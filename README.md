@@ -43,6 +43,13 @@ The same argument shows more generally: a root of the closure of B^k is a root o
 
 Other powers of the same block cross the line too: B⁵, B⁷, B⁹ and B¹¹ have roots at Re −1.123, −1.120, −1.134 and −1.128 (Newton-verified). As k grows, the roots of B^k spread along the curve {t : |λᵢ(t)| = 1} described below.
 
+### Twist families with exact limits
+Twisting one group of a skeleton more and more gives a family whose roots converge to the roots of one fixed "parent" polynomial. Examples:
+- For K33 and K39, (σ₁³σ₂⁻³σ₃³σ₂⁻ᵈ)³ breaks Hoste's conjecture for **every even d**, with roots converging to −1.150187 ± 1.634806 i.
+- Of all 1,038,334 skeletons up to 13 letters, 2,478 give such families (629 distinct). Every one comes with an exact limit and a certified threshold.
+
+See [`families/`](families/).
+
 **The first example found, K55,** is the closure of the 4-strand braid
 
     (σ₁² σ₂⁻³ σ₃ σ₂⁻¹ σ₃ σ₂⁻² σ₁)⁵
@@ -87,6 +94,7 @@ Run `pip install mpmath` (optional: `pip install snappy`), then `python verify.p
 
 ## Files
 - `verify.py`: standalone verification.
+- `NOTES.md`: side findings (balanced windings, the ring-resonator view, coils, other conjectures checked) and lessons from the search.
 - `family.py`: checks that K33's root is a root of every knot in the infinite family (B^(3m), m odd).
 - `k31_certificate.json`, `k33_certificate.json`, `k39_certificate.json`, `k45_certificate.json`, `k55_certificate.json`, `k57_certificate.json`: braid word, PD code, exact Alexander coefficients, roots, and checks.
 - `index.html`: all the knots; `31.html` … `57.html`: open in a browser to see each knot in 3D (drag to rotate, scroll to zoom).
